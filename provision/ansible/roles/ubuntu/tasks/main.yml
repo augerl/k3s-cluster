@@ -18,3 +18,11 @@
 - include: user.yml
   tags:
     - user
+
+- include: neofetch.yml
+  tags:
+    - neofetch
+
+- include: glances.yml
+  tags:
+    - glances

@@ -1,0 +1,32 @@
+---
+- name: Create default neofetch directory
+  file:
+    path: /home/unsmart/.config/neofetch
+    state: directory
+    recurse: yes
+    mode: '0644'
+    owner: unsmart
+    group: unsmart
+
+- name: Remove files from Message of the Day Directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/update-motd.d/10-help-text
+    - /etc/update-motd.d/50-landscape-sysinfo
+    - /etc/update-motd.d/50-motd-news
+
+- name: Comment out default MOTD
+  lineinfile:
+    path: /etc/update-motd.d/00-header
+    search_string: 'printf "Welcome to %s (%s %s %s)\n" "$DISTRIB_DESCRIPTION" "$(uname -o)" "$(uname -r)" "$(uname -m)"'
+    line: 'neofetch'
+
+- name: Copy neofetch Config to Config directory
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/templates/neofetch-config.conf"
+    dest: /home/unsmart/.config/neofetch/config.conf
+    owner: unsmart
+    group: unsmart
+    mode: '0644'

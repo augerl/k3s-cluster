@@ -1,0 +1,19 @@
+---
+- name: install glances and dependencies
+  pip:
+    name:
+      - glances[all]
+      - psutil
+      - bottle
+
+- name: install the glances systemd unit
+  copy:
+    src: "{{ playbook_dir }}/templates/glances-webserver.service"
+    dest: /etc/systemd/system/glances-webserver.service
+    mode: '0644'
+  become: true
+
+- name: Enable service glances-webserver and ensure it is not masked
+  ansible.builtin.systemd:
+    name: glances-webserver
+    enabled: yes
